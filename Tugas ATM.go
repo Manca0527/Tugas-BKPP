@@ -9,7 +9,7 @@ type Akun struct {
 }
 
 func main() {
-	dataAkun := []Akun{
+	var dataAkun []Akun = []Akun{
 		{"Ilyas", 1111, 200000},
 		{"Ali", 2222, 250000},
 	}
@@ -27,8 +27,10 @@ func main() {
 	fmt.Print("Masukan Pin: ")
 	fmt.Scanln(&pin)
 
-	loginBerhasil := false
-	for i := range dataAkun {
+	var loginBerhasil bool = false
+
+	var i int
+	for i = 0; i < len(dataAkun); i++ {
 		if dataAkun[i].Akun == namaAkun && dataAkun[i].Pin == pin {
 			Login = &dataAkun[i]
 			loginBerhasil = true
@@ -39,7 +41,7 @@ func main() {
 	if loginBerhasil {
 		fmt.Println("Login Berhasil")
 
-		isRunning := true
+		var isRunning bool = true
 
 		for isRunning {
 			var Pilihan int
@@ -58,11 +60,11 @@ func main() {
 				fmt.Print("Masukan Jumlah Setor Tunai: Rp")
 				fmt.Scanln(&jumlah)
 
-				jumlahValid := jumlah > 0
+				var jumlahValid bool = jumlah > 0
 				if !jumlahValid {
 					fmt.Println("Jumlah Tidak Valid!!!")
 				} else {
-					Login.saldo += jumlah
+					Login.saldo = Login.saldo + jumlah
 					fmt.Printf("Setoran berhasil! Saldo Baru: Rp%.2f\n", Login.saldo)
 				}
 
@@ -71,15 +73,15 @@ func main() {
 				fmt.Print("Masukan Jumlah Tarik Tunai: Rp")
 				fmt.Scanln(&jumlah)
 
-				jumlahValid := jumlah > 0
-				saldoCukup := jumlah <= Login.saldo
+				var jumlahValid bool = jumlah > 0
+				var saldoCukup bool = jumlah <= Login.saldo
 
 				if !jumlahValid {
 					fmt.Println("Jumlah Tidak Valid!!!")
 				} else if !saldoCukup {
 					fmt.Println("Saldo Tidak Cukup!!!")
 				} else {
-					Login.saldo -= jumlah
+					Login.saldo = Login.saldo - jumlah
 					fmt.Printf("Penarikan Berhasil! Saldo Baru: Rp%.2f\n", Login.saldo)
 				}
 
@@ -94,17 +96,20 @@ func main() {
 				fmt.Scanln(&jumlah)
 
 				var akunTujuan *Akun
-				akunDitemukan := false
-				for i := range dataAkun {
-					if dataAkun[i].Akun == NamaAkun {
-						akunTujuan = &dataAkun[i]
+				var akunDitemukan bool = false
+
+				// GANTI: for i := range dataAkun { ... } -> loop indeks tanpa :=
+				var j int
+				for j = 0; j < len(dataAkun); j++ {
+					if dataAkun[j].Akun == NamaAkun {
+						akunTujuan = &dataAkun[j]
 						akunDitemukan = true
 						break
 					}
 				}
 
-				jumlahValid := jumlah > 0
-				saldoCukup := jumlah <= Login.saldo
+				var jumlahValid bool = jumlah > 0
+				var saldoCukup bool = jumlah <= Login.saldo
 
 				if !akunDitemukan {
 					fmt.Println("Akun Tujuan Tidak Ditemukan!!!")
@@ -113,8 +118,8 @@ func main() {
 				} else if !saldoCukup {
 					fmt.Println("Saldo Tidak Cukup!!!")
 				} else {
-					Login.saldo -= jumlah
-					akunTujuan.saldo += jumlah
+					Login.saldo = Login.saldo - jumlah
+					akunTujuan.saldo = akunTujuan.saldo + jumlah
 					fmt.Printf("Transfer Berhasil! Saldo Baru: Rp%.2f\n", Login.saldo)
 				}
 
